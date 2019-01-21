@@ -72,15 +72,12 @@ const DNDFactory = ({ List, Item }) => ({ items, onDragEnd }) => {
             {items.map((item, index) => (
               <Draggable key={item.id} draggableId={item.id} index={index}>
                 {(provided, snapshotItem) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                  >
+                  <div ref={provided.innerRef} {...provided.draggableProps}>
                     <Item
-                      {...item}
+                      dragHandleProps={provided.dragHandleProps}
                       isDragging={snapshotItem.isDragging}
                       isDraggingOver={snapshot.isDraggingOver}
+                      {...item}
                     >
                       <Text field={["items", index, "text"]} id="hello" />
                     </Item>
@@ -96,8 +93,11 @@ const DNDFactory = ({ List, Item }) => ({ items, onDragEnd }) => {
   );
 };
 
-const Item = ({ content, children, ...props }) => (
-  <ContentWrapper {...props}>{children}</ContentWrapper>
+const Item = ({ content, children, dragHandleProps, ...props }) => (
+  <ContentWrapper {...props}>
+    {children}
+    <span {...dragHandleProps}>Drag me baby</span>
+  </ContentWrapper>
 );
 
 const ContentWrapper = styled.div`
