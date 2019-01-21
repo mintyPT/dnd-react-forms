@@ -60,7 +60,7 @@ class App extends Component {
   }
 }
 
-const DNDFactory = ({ List, Item }) => ({ items, onDragEnd }) => {
+const SingleColumnDNDFactory = ({ List, Item }) => ({ items, onDragEnd }) => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable">
@@ -77,10 +77,9 @@ const DNDFactory = ({ List, Item }) => ({ items, onDragEnd }) => {
                       dragHandleProps={provided.dragHandleProps}
                       isDragging={snapshotItem.isDragging}
                       isDraggingOver={snapshot.isDraggingOver}
+                      index={index}
                       {...item}
-                    >
-                      <Text field={["items", index, "text"]} id="hello" />
-                    </Item>
+                    />
                   </div>
                 )}
               </Draggable>
@@ -93,9 +92,9 @@ const DNDFactory = ({ List, Item }) => ({ items, onDragEnd }) => {
   );
 };
 
-const Item = ({ content, children, dragHandleProps, ...props }) => (
+const Item = ({ content, children, dragHandleProps, index, ...props }) => (
   <ContentWrapper {...props}>
-    {children}
+    <Text field={["items", index, "text"]} id="hello" />
     <span {...dragHandleProps}>Drag me baby</span>
   </ContentWrapper>
 );
@@ -114,7 +113,7 @@ const List = styled.div`
   width: 250px;
 `;
 
-const DND = DNDFactory({ List, Item });
+const DND = SingleColumnDNDFactory({ List, Item });
 
 // Put the thing into the DOM!
 ReactDOM.render(<App />, document.getElementById("root"));
