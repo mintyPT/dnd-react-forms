@@ -50,6 +50,8 @@ class App extends Component {
               <DND
                 onDragEnd={result => this.onDragEnd(result, formApi)}
                 items={items}
+                handleDelete={() => console.log("on delete")}
+                handleDuplicate={() => console.log("on duplicate")}
               />
               <pre>{JSON.stringify(formApi.values, null, 4)}</pre>
             </form>
@@ -60,7 +62,11 @@ class App extends Component {
   }
 }
 
-const SingleColumnDNDFactory = ({ List, Item }) => ({ items, onDragEnd }) => {
+const SingleColumnDNDFactory = ({ List, Item }) => ({
+  items,
+  onDragEnd,
+  ...props
+}) => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable">
@@ -79,6 +85,7 @@ const SingleColumnDNDFactory = ({ List, Item }) => ({ items, onDragEnd }) => {
                       isDraggingOver={snapshot.isDraggingOver}
                       index={index}
                       {...item}
+                      {...props}
                     />
                   </div>
                 )}
@@ -92,10 +99,20 @@ const SingleColumnDNDFactory = ({ List, Item }) => ({ items, onDragEnd }) => {
   );
 };
 
-const Item = ({ content, children, dragHandleProps, index, ...props }) => (
+const Item = ({
+  content,
+  children,
+  dragHandleProps,
+  index,
+  handleDelete,
+  handleDuplicate,
+  ...props
+}) => (
   <ContentWrapper {...props}>
     <Text field={["items", index, "text"]} id="hello" />
     <span {...dragHandleProps}>Drag me baby</span>
+    <button onClick={handleDelete}>Delete</button>
+    <button onClick={handleDuplicate}>Duplicate</button>
   </ContentWrapper>
 );
 
